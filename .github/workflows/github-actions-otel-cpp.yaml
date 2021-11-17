@@ -1,0 +1,12 @@
+name: Build opentelemetry cpp
+on: [push]
+jobs:
+  Build:
+    runs-on: windows-latest
+    steps:
+      - run: git clone https://github.com/open-telemetry/opentelemetry-cpp.git
+      - run: open-telemetry-cpp/ci/setup_windows_ci_environment.ps1
+      - run: open-telemetry-cpp/ci/setup_windows_cmake.ps1
+      - run: open-telemetry-cpp/ci/install_windows_bazelisk.ps1
+      - run: open-telemetry-cpp/ci/install_windows_protobuf.ps1
+      - run: open-telemetry-cpp/ci/do_ci.ps1 bazel.build
