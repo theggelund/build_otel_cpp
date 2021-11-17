@@ -17,7 +17,9 @@ jobs:
     - name: Bazel build 
       run: ./ci/do_ci.ps1 bazel.build
 
-    - run: Compress-Archive -Path ${env.working-directory} -DestinationPath bazel.zip 
+    - run: |
+        $SRC_DIR=(Get-Item -Path ".\").FullName
+        Compress-Archive -Path $SRC_DIR -DestinationPath bazel.zip 
       shell: powershell
 
     - name: 'Upload Artifact'
@@ -27,63 +29,63 @@ jobs:
         path: bazel.zip
         retention-days: 2
 
-  windows_cmake:
-    name: cmake Windows 
-    runs-on: windows-2019
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-        repository: 'open-telemetry/opentelemetry-cpp'
+  # windows_cmake:
+  #   name: cmake Windows 
+  #   runs-on: windows-2019
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       submodules: 'recursive'
+  #       repository: 'open-telemetry/opentelemetry-cpp'
 
-    - name: setup
-      run: |
-        ./ci/setup_windows_cmake.ps1
-        ./ci/setup_windows_ci_environment.ps1
+  #   - name: setup
+  #     run: |
+  #       ./ci/setup_windows_cmake.ps1
+  #       ./ci/setup_windows_ci_environment.ps1
 
-    - name: Cache Primes
-      id: cache-build
-      uses: actions/cache@v2
-      with:
-        path: build
-        key: ${{ runner.os }}-build
+  #   - name: Cache Primes
+  #     id: cache-build
+  #     uses: actions/cache@v2
+  #     with:
+  #       path: build
+  #       key: ${{ runner.os }}-build
 
-    - name: cmake part one
-      if: steps.cache-build.outputs.cache-hit != 'true'
-      run: |
-        $SRC_DIR=(Get-Item -Path ".\").FullName
+  #   - name: cmake part one
+  #     if: steps.cache-build.outputs.cache-hit != 'true'
+  #     run: |
+  #       $SRC_DIR=(Get-Item -Path ".\").FullName
 
-        mkdir build
-        mkdir plugin
+  #       mkdir build
+  #       mkdir plugin
         
-        $BUILD_DIR="$SRC_DIR\build"
-        $PLUGIN_DIR="$SRC_DIR\plugin"
-        $VCPKG_DIR="$SRC_DIR\vcpkg"
+  #       $BUILD_DIR="$SRC_DIR\build"
+  #       $PLUGIN_DIR="$SRC_DIR\plugin"
+  #       $VCPKG_DIR="$SRC_DIR\vcpkg"
                 
-        cd $BUILD_DIR
+  #       cd $BUILD_DIR
 
-        cmake $SRC_DIR -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_BUILD_TYPE=Release "-DCMAKE_TOOLCHAIN_FILE=$VCPKG_DIR\scripts\buildsystems\vcpkg.cmake"
-      shell: powershell
+  #       cmake $SRC_DIR -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_BUILD_TYPE=Release "-DCMAKE_TOOLCHAIN_FILE=$VCPKG_DIR\scripts\buildsystems\vcpkg.cmake"
+  #     shell: powershell
 
-    - name: cmake part two
-      run: |
-        cd build 
-        cmake --build . --target all
+  #   - name: cmake part two
+  #     run: |
+  #       cd build 
+  #       cmake --build . --target all
 
-    - name: cmake part three
-      run: |
-        cd build 
-        cmake --install . --config Release --prefix ${env.working-directory}/build/install
+  #   - name: cmake part three
+  #     run: |
+  #       cd build 
+  #       cmake --install . --config Release --prefix ${env.working-directory}/build/install
 
-    - run: Compress-Archive -Path ${env.working-directory} -DestinationPath cmake.zip 
-      shell: powershell
+  #   - run: Compress-Archive -Path ${env.working-directory} -DestinationPath cmake.zip 
+  #     shell: powershell
 
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v2
-      with:
-        name: cmake.zip
-        path: cmake.zip
-        retention-days: 2
+  #   - name: 'Upload Artifact'
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: cmake.zip
+  #       path: cmake.zip
+  #       retention-days: 2
   # Build:
   #   runs-on: windows-latest
   #   steps:
