@@ -17,6 +17,16 @@ jobs:
     - name: Bazel build 
       run: ./ci/do_ci.ps1 bazel.build
 
+    - run: Compress-Archive -Path ${env.working-directory} -DestinationPath bazel.zip 
+      shell: powershell
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v2
+      with:
+        name: bazel.zip
+        path: bazel.zip
+        retention-days: 2
+
   windows_cmake:
     name: cmake Windows 
     runs-on: windows-2019
@@ -65,15 +75,15 @@ jobs:
         cd build 
         cmake --install . --config Release --prefix ${env.working-directory}/build/install
 
-    - run: Compress-Archive -Path ${env.working-directory}/build -DestinationPath build.zip 
+    - run: Compress-Archive -Path ${env.working-directory} -DestinationPath cmake.zip 
       shell: powershell
 
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v2
       with:
-        name: build.zip
-        path: build.zip
-        retention-days: 5
+        name: cmake.zip
+        path: cmake.zip
+        retention-days: 2
   # Build:
   #   runs-on: windows-latest
   #   steps:
