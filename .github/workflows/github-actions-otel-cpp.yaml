@@ -5,13 +5,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: git clone https://github.com/open-telemetry/opentelemetry-cpp.git
-      - run: open-telemetry-cpp/ci/setup_windows_ci_environment.ps1
+      - run: .\opentelemetry-cpp\ci\setup_windows_ci_environment.ps1
         shell: powershell
-      - run: open-telemetry-cpp/ci/setup_windows_cmake.ps1
+      - run: .\opentelemetry-cpp\ci\setup_windows_cmake.ps1
         shell: powershell
-      - run: open-telemetry-cpp/ci/install_windows_bazelisk.ps1
+      - run: .\opentelemetry-cpp\ci\install_windows_bazelisk.ps1
         shell: powershell
-      - run: open-telemetry-cpp/ci/install_windows_protobuf.ps1
+      - run: .\opentelemetry-cpp\ci\install_windows_protobuf.ps1
         shell: powershell
-      - run: open-telemetry-cpp/ci/do_ci.ps1 bazel.build
+      - run: .\opentelemetry-cpp\ci\do_ci.ps1 bazel.build
         shell: powershell
