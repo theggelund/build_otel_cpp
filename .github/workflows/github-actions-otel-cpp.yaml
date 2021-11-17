@@ -16,10 +16,21 @@ jobs:
         ./ci/setup_windows_ci_environment.ps1
         ./ci/install_windows_bazelisk.ps1
 
-    - name: run cmake.test
-      run: ./ci/do_ci.ps1 cmake.test
+    - name: run cmake 1
+      run: |
+        mkdir build && cd build && cmake ..
+      
+    - name: run cmake 2
+      run: |
+        cd build 
+        cmake --build . --target all
 
-    - run: Compress-Archive -Path build -DestinationPath build.zip 
+    - name: run cmake 3
+      run: |
+        cd build 
+        cmake --install . --config Release --prefix ${env.working-directory}/build/install
+
+    - run: Compress-Archive -Path ${env.working-directory}/build -DestinationPath build.zip 
       shell: powershell
 
     - name: 'Upload Artifact'
