@@ -29,6 +29,7 @@ jobs:
     - name: setup
 #      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       run: |
+        $ErrorActionPreference = 'SilentlyContinue'
         ./tools/build-vs2019.cmd
       shell: powershell
 
