@@ -1,5 +1,7 @@
 name: Build opentelemetry cpp
 on: [push]
+env:
+  VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
 jobs:
   windows:
     name: Build
@@ -25,14 +27,15 @@ jobs:
         key: ${{ runner.os }}-vcpkg2
 
     - name: setup
+      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       run: |
         ./tools/setup-buildtools.cmd
       shell: powershell
 
-#    - name: build 
-#      run: |
-#        ./tools/build.cmd
-#      shell: powershell 
+    - name: build 
+      run: |
+        ./tools/build.cmd
+      shell: powershell 
 
     - run: |
         Compress-Archive -Path . -DestinationPath build.zip 
