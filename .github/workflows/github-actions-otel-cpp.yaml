@@ -10,14 +10,29 @@ jobs:
         submodules: 'recursive'
         repository: 'open-telemetry/opentelemetry-cpp'
 
+    - name: Cache vcpkg
+      id: cache-vcpkg
+      uses: actions/cache@v2
+      with:
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
+        key: ${{ runner.os }}-vcpkg
+
+    - name: Cache vcpkg
+      id: cache-vcpkg2
+      uses: actions/cache@v2
+      with:
+        path:  C:\vcpkg\
+        key: ${{ runner.os }}-vcpkg2
+
     - name: setup
       run: |
         ./tools/setup-buildtools.cmd
       shell: powershell
 
-    - name: build 
-      run: ./tools/build.cmd
-      shell: powershell 
+#    - name: build 
+#      run: |
+#        ./tools/build.cmd
+#      shell: powershell 
 
     - run: |
         Compress-Archive -Path . -DestinationPath build.zip 
