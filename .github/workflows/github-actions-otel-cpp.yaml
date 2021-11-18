@@ -29,8 +29,7 @@ jobs:
     - name: setup
 #      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       run: |
-        ./tools/setup-buildtools.cmd
-        ./tools/build.cmd
+        ./tools/build-vs2019.cmd
       shell: powershell
 
     - run: |
